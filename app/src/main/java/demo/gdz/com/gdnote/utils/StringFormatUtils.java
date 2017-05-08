@@ -1,7 +1,11 @@
 package demo.gdz.com.gdnote.utils;
 
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Administrator on 2017/5/4 0004.
@@ -16,6 +20,8 @@ public class StringFormatUtils {
         return time;
     }
     public static String[] formatPath(String path){
+        if (path==null)
+            return null;
         return  path.split(";");
     }
     public static String compliePath(String [] path){
@@ -25,19 +31,28 @@ public class StringFormatUtils {
         }
         return sb.toString();
     }
-    public static  String compliePosition(int[] positions){
+    public static  String compliePosition(Integer[] positions){
         StringBuffer sb = new StringBuffer();
         for (int i =0;i<positions.length;i++){
-            sb.append(positions[i]+";");
+            Log.i(TAG, "compliePosition: positions"+i+positions[i]);
+            Log.i(TAG, "compliePosition: positions"+i+positions[i].intValue());
+            sb.append(positions[i].intValue()+";");
         }
         return sb.toString();
     }
-    public static int[] formatPosition(String positionStr){
+    public static Integer[] formatPosition(String positionStr){
+        if (positionStr==null){
+            return null;
+        }
         String []  positionArr = positionStr.split(";");
         int len =positionArr.length;
-        int[]  position = new int[len];
+        Integer[]  position = new Integer[len];
         for (int i =0;i<len;i++){
-            position[i] = Integer.parseInt(positionArr[i]);
+            Log.i(TAG, "formatPosition: position"+position[i]);
+            if (!positionArr[i].equals(""))
+            {
+                position[i] = Integer.parseInt(positionArr[i]);
+            }
         }
         return position;
     }

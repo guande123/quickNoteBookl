@@ -97,10 +97,11 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
     private void insertData(NoteList noteList,String content) {
         String[] paths = noteList.getImgPath();
-        int [] positions = noteList.getPosition();
+        Integer[] positions = noteList.getPosition();
         for(int i=0;i<paths.length;i++){
-            content.replace(paths[i],"");
-            insertBitmap(paths[i],positions[i]);
+           String replace =   content.replace(paths[i],"");
+            Log.i(TAG, "insertData:replace "+replace);
+         insertBitmap(paths[i],positions[i]);
         }
 
     }
@@ -112,17 +113,18 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         ContentValues values = new ContentValues();
         values.put(NoteListTable.TIME,time);
         values.put(NoteListTable.CONTENT,content);
-        if (mImgPath!=null&&mPosition!=null){
+        if (mImgPath!=null&&mImgPath.size()>0){
             String[] paths = Arrays.copyOf(mImgPath.toArray(),mImgPath.size(),String[].class);
-            int[] positions = Arrays.copyOf(mPosition.toArray(),mPosition.size(),  int[].class);
-           String path = StringFormatUtils.compliePath(paths);
-            String position = StringFormatUtils.compliePosition(positions);
+            String path = StringFormatUtils.compliePath(paths);
             Log.i(TAG, "saveContent: path = "+path);
-            Log.i(TAG, "saveContent: position = "+position);
             values.put(NoteListTable.PATH,path);
+        }
+        if (mPosition!=null&&mPosition.size()>0){
+            Integer[] positions = Arrays.copyOf(mPosition.toArray(),mPosition.size(),  Integer[].class);
+            String position = StringFormatUtils.compliePosition(positions);
+            Log.i(TAG, "saveContent: position = "+position);
             values.put(NoteListTable.POSITION,position);
         }
-
         mContentPro.insert(MyContentPro.NOTELIST_URI,values);
         Toast.makeText(EditActivity.this,"save successful!!",Toast.LENGTH_SHORT).show();
         finish();
@@ -179,5 +181,5 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private ArrayList<String> mImgPath = new ArrayList<>();
-    private ArrayList<Integer> mPosition = new ArrayList<>();
+   private ArrayList<Integer> mPosition = new ArrayList<>();
 }

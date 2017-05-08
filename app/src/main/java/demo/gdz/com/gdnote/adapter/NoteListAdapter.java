@@ -16,7 +16,7 @@ import demo.gdz.com.gdnote.iface.OnDeleteListener;
  * Created by Administrator on 2017/5/2 0002.
  */
 
-public class NoteListAdapter extends BaseAdapter{
+public class NoteListAdapter extends BaseAdapter {
     private NoteList[] mNoteList;
     private Context mContext;
     private OnDeleteListener mDeleteListener;
@@ -26,11 +26,15 @@ public class NoteListAdapter extends BaseAdapter{
     }
     @Override
     public int getCount() {
+        if (mNoteList==null)
+            return 0;
         return mNoteList.length;
     }
 
     @Override
     public Object getItem(int position) {
+        if(mNoteList==null)
+            return null;
         return mNoteList[position];
     }
 
