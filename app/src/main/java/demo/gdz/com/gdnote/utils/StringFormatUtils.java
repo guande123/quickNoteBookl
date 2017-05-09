@@ -56,4 +56,17 @@ public class StringFormatUtils {
         }
         return position;
     }
+    public static String trimNString(String string){
+        String[] strArr = string.split("\n");
+        String str= "";
+        if(strArr==null){
+            return  str;
+        }
+        int len =strArr.length;
+        Log.i(TAG, "trimNString: strArr"+len);
+        for (int i =0;i<len;i++){
+            str+=strArr[i];
+        }
+        return str;
+    }
 }

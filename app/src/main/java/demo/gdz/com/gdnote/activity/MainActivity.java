@@ -17,8 +17,8 @@ import demo.gdz.com.gdnote.data.NoteList;
 import demo.gdz.com.gdnote.data.NoteListTable;
 import demo.gdz.com.gdnote.iface.MainView;
 import demo.gdz.com.gdnote.iface.OnDeleteListener;
-import demo.gdz.com.gdnote.presenter.MViewPresenterImp;
-import demo.gdz.com.gdnote.presenter.presenterImp.MViewPersenter;
+import demo.gdz.com.gdnote.presenter.presenterImp.MViewPresenterImp;
+import demo.gdz.com.gdnote.presenter.MViewPersenter;
 
 ;
 

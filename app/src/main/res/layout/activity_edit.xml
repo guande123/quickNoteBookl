@@ -4,7 +4,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-       <EditText android:layout_width="match_parent"
+       <demo.gdz.com.gdnote.widget.MyEditView
+           android:layout_width="match_parent"
          android:id="@+id/edt_content"
          android:layout_height="0dp"
          android:layout_weight="9"

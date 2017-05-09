@@ -1,4 +1,4 @@
-package demo.gdz.com.gdnote.presenter.presenterImp;
+package demo.gdz.com.gdnote.presenter;
 
 import demo.gdz.com.gdnote.data.NoteList;
 
@@ -11,6 +11,5 @@ public interface MViewPersenter {
     void searchItem(String string);
     void deleteNoteList(int position);
     void unBindContent();
-
     NoteList[] NoteList();
 }

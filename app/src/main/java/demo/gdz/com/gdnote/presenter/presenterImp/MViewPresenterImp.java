@@ -1,4 +1,4 @@
-package demo.gdz.com.gdnote.presenter;
+package demo.gdz.com.gdnote.presenter.presenterImp;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,7 +10,7 @@ import java.util.Arrays;
 import demo.gdz.com.gdnote.data.NoteList;
 import demo.gdz.com.gdnote.data.NoteListTable;
 import demo.gdz.com.gdnote.iface.MainView;
-import demo.gdz.com.gdnote.presenter.presenterImp.MViewPersenter;
+import demo.gdz.com.gdnote.presenter.MViewPersenter;
 import demo.gdz.com.gdnote.utils.MyContentPro;
 import demo.gdz.com.gdnote.utils.StringFormatUtils;
 
@@ -20,7 +20,7 @@ import static android.content.ContentValues.TAG;
  * Created by Administrator on 2017/5/8 0008.
  */
 
-public class MViewPresenterImp implements MViewPersenter{
+public class MViewPresenterImp implements MViewPersenter {
     private NoteList[] mNoteLists;
     private MainView mMainView;
     private MyContentPro mMyContentPro;
