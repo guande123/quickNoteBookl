@@ -84,6 +84,11 @@ public class MyContentPro extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+        db =  sHelper.getWritableDatabase();
+        switch (sUriMatcher.match(uri)){
+            case 1:
+                return  db.update(NoteListTable.TABLE,values ,selection,selectionArgs);
+        }
         return 0;
     }
     public void closeToAll(){

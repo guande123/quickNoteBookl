@@ -65,7 +65,7 @@ public class StringFormatUtils {
         int len =strArr.length;
         Log.i(TAG, "trimNString: strArr"+len);
         for (int i =0;i<len;i++){
-            str+=strArr[i];
+                str+=strArr[i]+"\n";
         }
         return str;
     }

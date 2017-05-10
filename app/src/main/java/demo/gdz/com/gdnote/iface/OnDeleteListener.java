@@ -5,5 +5,6 @@ package demo.gdz.com.gdnote.iface;
  */
 
 public interface OnDeleteListener {
+        /*删除列表项*/
     void deleteNoteList(int position);
 }

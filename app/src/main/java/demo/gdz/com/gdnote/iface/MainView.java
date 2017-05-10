@@ -7,5 +7,6 @@ import demo.gdz.com.gdnote.data.NoteList;
  */
 
 public interface MainView {
+    /*刷新adapter*/
     void notifyAdapter(NoteList[] noteLists);
 }

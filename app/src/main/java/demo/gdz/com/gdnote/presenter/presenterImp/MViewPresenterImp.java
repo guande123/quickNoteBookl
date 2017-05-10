@@ -39,13 +39,14 @@ public class MViewPresenterImp implements MViewPersenter {
         if(size!=0) {
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 mNoteLists[i] = new NoteList();
-                mNoteLists[i].setTime(cursor.getString(0));
-                mNoteLists[i].setContent(cursor.getString(1));
-                String  paths = cursor.getString(2);
+                mNoteLists[i].setId(cursor.getInt(0));
+                mNoteLists[i].setTime(cursor.getString(1));
+                mNoteLists[i].setContent(cursor.getString(2));
+                String  paths = cursor.getString(3);
                 String[] path =   StringFormatUtils.formatPath(paths);
                 mNoteLists[i].setImgPath(path);
 
-                String positions=cursor.getString(3);
+                String positions=cursor.getString(4);
                 Integer[] position = StringFormatUtils.formatPosition(positions);
                 Log.i(TAG, "notifyNoteLists: paths"+paths);
                 Log.i(TAG, "notifyNoteLists: positions"+positions);
@@ -88,6 +89,7 @@ public class MViewPresenterImp implements MViewPersenter {
             Log.i(TAG, "deleteNoteList:mNoteList[position].getTime = " + mNoteLists[position].getTime());
             mMyContentPro.delete(MyContentPro.NOTELIST_URI, whereClaus, new String[]{mNoteLists[position].getTime()});
             notifyNoteLists();
+
         }
     }
 

@@ -28,8 +28,6 @@ public class MySqLiteHelper extends SQLiteOpenHelper {
                       instance = new MySqLiteHelper(context,name);
                   }
               }
-
-
         }
         return instance;
     }

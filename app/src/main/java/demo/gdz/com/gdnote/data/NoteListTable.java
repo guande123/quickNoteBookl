@@ -10,9 +10,15 @@ public class NoteListTable {
     public static final String CONTENT = "content";
     public static final String PATH= "imgPath";
     public static final String POSITION ="position";
+    public static  final String  ID = "id";
+    public static final int ADD = 1;
+    public static  final int DELETE = 2;
+    public static  final int MODIFY = 3;
+    public static final int UPDATE = 4;
     public  static final String CREATE_NOTELIST="create table if not exists notelist(" +
-            NoteListTable.TIME+  " varchar(30),"+
-            NoteListTable.CONTENT+" text,"+
-            NoteListTable.PATH+" varchar(200)," +
-            NoteListTable.POSITION+" varchar(100) )";
+            ID +"  INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,"+
+            TIME+  " varchar(30),"+
+            CONTENT+" text,"+
+            PATH+" varchar(200)," +
+            POSITION+" varchar(100) )";
 }

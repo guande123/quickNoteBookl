@@ -1,6 +1,7 @@
 package demo.gdz.com.gdnote.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,16 +14,17 @@ import android.widget.ListView;
 
 import demo.gdz.com.gdnote.R;
 import demo.gdz.com.gdnote.adapter.NoteListAdapter;
+import demo.gdz.com.gdnote.broadcast.DBChangeReceiver;
 import demo.gdz.com.gdnote.data.NoteList;
-import demo.gdz.com.gdnote.data.NoteListTable;
+import demo.gdz.com.gdnote.iface.DBChangeListener;
 import demo.gdz.com.gdnote.iface.MainView;
 import demo.gdz.com.gdnote.iface.OnDeleteListener;
-import demo.gdz.com.gdnote.presenter.presenterImp.MViewPresenterImp;
 import demo.gdz.com.gdnote.presenter.MViewPersenter;
+import demo.gdz.com.gdnote.presenter.presenterImp.MViewPresenterImp;
 
 ;
 
-public class MainActivity extends AppCompatActivity implements OnDeleteListener,MainView,View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements OnDeleteListener,MainView,View.OnClickListener,DBChangeListener{
     private static final String TAG ="MainActivity" ;
     private ListView mListView;
     private Button mSearchBtn;
@@ -30,16 +32,35 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener,
     private EditText mEdtSearch;
     private NoteListAdapter mAdapter;
     private MViewPersenter mMViewPersenter;
+    private DBChangeReceiver mChangeReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViews();
+        initReceiver();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    private void initReceiver() {
+        mChangeReceiver = new DBChangeReceiver(MainActivity.this);
+        IntentFilter filterIntent=new IntentFilter();
+        filterIntent.addAction(DBChangeReceiver.ACTION_CHANGE);
+       // filterIntent.addCategory("");
+        registerReceiver(mChangeReceiver,filterIntent);
+    }
+
     @Override
     protected void onDestroy() {
         if(mMViewPersenter!=null){
             mMViewPersenter.unBindContent();
+        }
+        if(mChangeReceiver!=null){
+            unregisterReceiver(mChangeReceiver);
         }
         super.onDestroy();
     }
@@ -61,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener,
                 Log.i(TAG, "onItemClick: position"+position);
                 Intent intent = new Intent(MainActivity.this,EditActivity.class);
                 NoteList[] noteList = mMViewPersenter.NoteList();
-                intent.putExtra(NoteListTable.CONTENT,noteList[position].getContent());
+               // intent.putExtra(NoteListTable.CONTENT,noteList[position].getContent());
                 intent.putExtra("NoteList",noteList[position]);
                 startActivity(intent);
             }
@@ -92,5 +113,9 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener,
     @Override
     public void deleteNoteList(int position) {
         mMViewPersenter.deleteNoteList(position);
+    }
+    @Override
+    public void dbChange() {
+        mMViewPersenter.notifyNoteLists();
     }
 }

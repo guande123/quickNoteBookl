@@ -11,14 +11,15 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import demo.gdz.com.gdnote.data.NoteList;
 import demo.gdz.com.gdnote.data.NoteListTable;
 import demo.gdz.com.gdnote.iface.EditView;
 import demo.gdz.com.gdnote.presenter.EditPresenter;
 import demo.gdz.com.gdnote.utils.MyContentPro;
 import demo.gdz.com.gdnote.utils.StringFormatUtils;
-import demo.gdz.com.gdnote.widget.MyEditView;
 
 import static android.content.ContentValues.TAG;
+import static demo.gdz.com.gdnote.utils.StringFormatUtils.compliePath;
 
 /**
  * Created by Administrator on 2017/5/9 0009.
@@ -33,34 +34,63 @@ public class EditPresenterImp implements EditPresenter {
     public EditPresenterImp(Context context,EditView editView){
         mMyContentPro = new MyContentPro(context,"notelist,db");
         mEditView = editView;
+        mContext =context;
     }
 
-    @Override
-    public  void saveContent(MyEditView editView) {
-        String content = editView.getText().toString().trim();
+    public  ContentValues  saveContent(String  content) {
         String time = StringFormatUtils.formatCurTime();
         Log.i(TAG,time);
         ContentValues values = new ContentValues();
         values.put(NoteListTable.TIME,time);
         values.put(NoteListTable.CONTENT,content);
+        values.put(NoteListTable.TIME,time+"12324");
         if (mImgPath!=null&&mImgPath.size()>0){
             String[] paths = Arrays.copyOf(mImgPath.toArray(),mImgPath.size(),String[].class);
-            String path = StringFormatUtils.compliePath(paths);
+            String  path = compliePath(paths);
             Log.i(TAG, "saveContent: path = "+path);
             values.put(NoteListTable.PATH,path);
         }
         if (mPosition!=null&&mPosition.size()>0){
             Integer[] positions = Arrays.copyOf(mPosition.toArray(),mPosition.size(),  Integer[].class);
-            String position = StringFormatUtils.compliePosition(positions);
+            String  position = StringFormatUtils.compliePosition(positions);
             Log.i(TAG, "saveContent: position = "+position);
             values.put(NoteListTable.POSITION,position);
         }
+        return  values;
+    }
+
+    @Override
+    public void addNoteList(String content){
+        Log.i(TAG, "addNoteList: "+content);
+        ContentValues values =  saveContent(content);
         mMyContentPro.insert(MyContentPro.NOTELIST_URI,values);
         mEditView.saveSuccess();
     }
 
     @Override
-    public void onResultForPath(Intent data,MyEditView editView) {
+    public void addNoteList(String content, NoteList notelist) {
+        ContentValues values =  saveContent(content);
+        String[] paths = notelist.getImgPath();
+        values.put(NoteListTable.ID,notelist.getId());
+        if(paths!=null&&paths.length>0){
+            String path  = StringFormatUtils.compliePath(paths);
+            values.put(NoteListTable.PATH,path);
+        }
+        Integer[] positions = notelist.getPosition();
+        if(positions!=null&&positions.length>0){
+            String position  = StringFormatUtils.compliePosition(positions);
+            values.put(NoteListTable.PATH,position);
+        }
+        String [] selectArgs = new String[]{String.valueOf(notelist.getId())};
+        String select =NoteListTable.ID +"=?";
+       /* mMyContentPro.update(MyContentPro.NOTELIST_URI,values, select,selectArgs);*/
+        mMyContentPro.delete(MyContentPro.NOTELIST_URI,select,selectArgs);
+        mMyContentPro.insert(MyContentPro.NOTELIST_URI,values);
+        mEditView.saveSuccess();
+    }
+
+    @Override
+    public void onResultForPath(Intent data,int index) {
         Uri imgUri = data.getData();
         String[] filePathColumn = new String[]{MediaStore.Images.Media.DATA};
         Cursor cursor =  mContext.getContentResolver().query(imgUri,filePathColumn,null,null,null);
@@ -71,10 +101,10 @@ public class EditPresenterImp implements EditPresenter {
         Log.i(TAG, "onActivityResult: imgUri = "+ imgUri.toString());
         Log.i(TAG, "onActivityResult: path = "+path);
         cursor.close();
-        int index = editView.getSelectionStart();
         mImgPath.add(path);
         mPosition.add(index);
-        editView.insertBitmap(path,index);
+        mEditView.insertBitmap(path,index);
+
     }
 
     @Override

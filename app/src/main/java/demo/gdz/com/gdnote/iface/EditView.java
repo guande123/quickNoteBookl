@@ -6,4 +6,6 @@ package demo.gdz.com.gdnote.iface;
 
 public interface EditView {
     void saveSuccess();
+
+    void insertBitmap(String path, int index);
 }
