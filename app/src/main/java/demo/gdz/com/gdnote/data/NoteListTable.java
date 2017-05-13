@@ -19,6 +19,5 @@ public class NoteListTable {
             ID +"  INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,"+
             TIME+  " varchar(30),"+
             CONTENT+" text,"+
-            PATH+" varchar(200)," +
-            POSITION+" varchar(100) )";
+            PATH+" varchar(200) )";
 }

@@ -30,14 +30,16 @@ public class EditPresenterImp implements EditPresenter {
     private Context mContext;
     private MyContentPro mMyContentPro;
     private ArrayList<String> mImgPath = new ArrayList<>();
-    private ArrayList<Integer> mPosition = new ArrayList<>();
+    private NoteList mNoteList;
+   // private ArrayList<Integer> mPosition = new ArrayList<>();
     public EditPresenterImp(Context context,EditView editView){
         mMyContentPro = new MyContentPro(context,"notelist,db");
         mEditView = editView;
         mContext =context;
     }
 
-    public  ContentValues  saveContent(String  content) {
+    @Override
+    public void addNoteList(String content){
         String time = StringFormatUtils.formatCurTime();
         Log.i(TAG,time);
         ContentValues values = new ContentValues();
@@ -50,36 +52,37 @@ public class EditPresenterImp implements EditPresenter {
             Log.i(TAG, "saveContent: path = "+path);
             values.put(NoteListTable.PATH,path);
         }
-        if (mPosition!=null&&mPosition.size()>0){
-            Integer[] positions = Arrays.copyOf(mPosition.toArray(),mPosition.size(),  Integer[].class);
-            String  position = StringFormatUtils.compliePosition(positions);
-            Log.i(TAG, "saveContent: position = "+position);
-            values.put(NoteListTable.POSITION,position);
-        }
-        return  values;
-    }
-
-    @Override
-    public void addNoteList(String content){
         Log.i(TAG, "addNoteList: "+content);
-        ContentValues values =  saveContent(content);
+
         mMyContentPro.insert(MyContentPro.NOTELIST_URI,values);
         mEditView.saveSuccess();
     }
 
     @Override
     public void addNoteList(String content, NoteList notelist) {
-        ContentValues values =  saveContent(content);
-        String[] paths = notelist.getImgPath();
+        String time = StringFormatUtils.formatCurTime();
+        Log.i(TAG,time);
+        ContentValues values = new ContentValues();
         values.put(NoteListTable.ID,notelist.getId());
-        if(paths!=null&&paths.length>0){
-            String path  = StringFormatUtils.compliePath(paths);
+        values.put(NoteListTable.TIME,time);
+        values.put(NoteListTable.CONTENT,content);
+        values.put(NoteListTable.TIME,time+"12324");
+        String [] imgPath =notelist.getImgPath();
+        if(imgPath!=null&&imgPath.length>0){
+            ArrayList<String> arrayList = new ArrayList<>();
+            for (int i =0;i<imgPath.length;i++){
+                arrayList.add(imgPath[i]);
+            }
+            if (mImgPath!=null&&mImgPath.size()>0){
+            for (int i =0;i<mImgPath.size();i++){
+                arrayList.add(mImgPath.get(i));
+            }
+            mImgPath = arrayList;
+            String[] paths = Arrays.copyOf(mImgPath.toArray(),mImgPath.size(),String[].class);
+            String  path = compliePath(paths);
+            Log.i(TAG, "saveContent: path = "+path);
             values.put(NoteListTable.PATH,path);
         }
-        Integer[] positions = notelist.getPosition();
-        if(positions!=null&&positions.length>0){
-            String position  = StringFormatUtils.compliePosition(positions);
-            values.put(NoteListTable.PATH,position);
         }
         String [] selectArgs = new String[]{String.valueOf(notelist.getId())};
         String select =NoteListTable.ID +"=?";
@@ -102,7 +105,7 @@ public class EditPresenterImp implements EditPresenter {
         Log.i(TAG, "onActivityResult: path = "+path);
         cursor.close();
         mImgPath.add(path);
-        mPosition.add(index);
+       // mPosition.add(index);
         mEditView.insertBitmap(path,index);
 
     }

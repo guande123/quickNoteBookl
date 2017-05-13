@@ -3,6 +3,7 @@ package demo.gdz.com.gdnote.widget;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
@@ -29,31 +30,60 @@ public class MyEditView extends AppCompatEditText {
     }
     public  void insertBitmap(String path,int index) /*throws FileNotFoundException */{
         Log.i(TAG, "insertBitmap: index 1 = "+index);
-        SpannableString newLine = new SpannableString("\n");
-        mEditable.insert(index,newLine);
+     /*   SpannableString newLine = new SpannableString("\n");*/
+   //     mEditable.insert(index,newLine);
         SpannableString ss = new SpannableString(path);
         Bitmap bitmap = BitmapFactory.decodeFile(path);
-        ImageSpan img = new ImageSpan(mContext,bitmap);
+        Log.i(TAG, "insertBitmap: getwidth() = "+ bitmap.getWidth());
+        Log.i(TAG, "insertBitmap: getHeight() = "+ bitmap.getHeight());
+        Bitmap scaleBitmap = scaleBitmap(bitmap,50,50);
+        ImageSpan img = new ImageSpan(mContext,scaleBitmap);
         ss.setSpan(img,0,ss.length(),SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
         mEditable.insert(index,ss);
-        mEditable.insert(index,newLine);
+     //   mEditable.insert(index,newLine);
+    }
+
+    public Bitmap scaleBitmap(Bitmap origin , int   w ,int  h){
+        if (origin ==null){
+            return  null;
+        }
+       int width =  origin.getWidth();
+        int height = origin.getHeight();
+        Log.i(TAG, "insertBitmap:origin  getwidth() = "+ origin.getWidth());
+        Log.i(TAG, "insertBitmap:origin getHeight() = "+ origin.getHeight());
+        float scaleWidth = (float) w/width;
+        float scaleHeight = (float) h/height;
+        Log.i(TAG, "insertBitmap:origin scaleWidth = "+ scaleWidth);
+        Log.i(TAG, "insertBitmap:origin scaleHeight = "+ scaleHeight);
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth,scaleHeight);
+        Bitmap bitmap = Bitmap.createBitmap(origin,0,0,width,height,matrix,false);
+   /*      if (!origin.isRecycled()) {
+            origin.recycle();
+         }*/
+         return bitmap;
     }
     public  void insertData(NoteList noteList) {
         String content = noteList.getContent();
         String[] paths = noteList.getImgPath();
-        Integer[] positions = noteList.getPosition();
-        if(paths!=null &&positions!=null) {
-            for (int i = 0; i < paths.length; i++) {
-                String replace =content.replace("\n"+paths[i]+"\n","");
-                Log.i(TAG, "insertData:replace =" + replace);
-               // replace = StringFormatUtils.trimNString(replace);
-                Log.i(TAG, "insertData:replace trim  =" + replace);
-                Log.i(TAG, "insertData:replace.length() =" + replace.length());
-                mEditable.insert(0,replace);
-                insertBitmap(paths[i], positions[i]);
+        if(paths!=null ) {
+            int len = paths.length;
+            int[] index = new int[paths.length];
+            for (int i = 0; i < len; i++) {
+               index[i] = content.indexOf(paths[i]);
+                content =content.replace(paths[i],"");
+                Log.i(TAG, "insertData:index =" + index[i]);
+                Log.i(TAG, "insertData:index =" + paths[i]);
+                Log.i(TAG, "insertData:content =" + content);
+            }
+            mEditable.append(content);
+            for(int i = 0; i <len; i++){
+                if(index[i]!=-1){
+                    insertBitmap(paths[i],index[i]);
+                }
             }
         }else{
-              mEditable.insert(0,content);
+              mEditable.append(content);
         }
     }
     /*    无法通过uri直接加载图片，具体原因 未知*/

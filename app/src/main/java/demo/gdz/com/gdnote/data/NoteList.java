@@ -11,16 +11,10 @@ public class NoteList implements Serializable{
     private String content;
     private int id;
     private  String[] mImgPath;
-    private Integer[] position;/*edittext 控件图片出现的位置*/
+   // private Integer[] position;/*edittext 控件图片出现的位置*/
     public NoteList(){}
     public int getId() {return id;}
     public void setId(int id) {this.id = id;}
-    public void setPosition(Integer[] position) {
-        this.position = position;
-    }
-    public Integer[] getPosition() {
-        return position;
-    }
     public String[] getImgPath() {
         return mImgPath;
     }

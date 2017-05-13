@@ -46,11 +46,11 @@ public class MViewPresenterImp implements MViewPersenter {
                 String[] path =   StringFormatUtils.formatPath(paths);
                 mNoteLists[i].setImgPath(path);
 
-                String positions=cursor.getString(4);
+             /*   String positions=cursor.getString(4);
                 Integer[] position = StringFormatUtils.formatPosition(positions);
                 Log.i(TAG, "notifyNoteLists: paths"+paths);
                 Log.i(TAG, "notifyNoteLists: positions"+positions);
-                mNoteLists[i].setPosition(position);
+                mNoteLists[i].setPosition(position);*/
                 i++;
             }
         }
